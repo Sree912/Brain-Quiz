@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>California Teen Permit Practice Test · Gemini</title>
+<style>
+  :root{
+    --card:#ffffff; --card2:#f1f5f9;
+    --accent:#1d4ed8; --accent2:#0ea5e9; --good:#16a34a; --bad:#dc2626;
+    --text:#0f172a; --muted:#64748b; --border:#cbd5e1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:linear-gradient(160deg,#dbeafe,#eff6ff 40%,#fff);
+    color:var(--text);min-height:100vh;display:flex;justify-content:center;padding:24px;}
+  .app{width:100%;max-width:720px}
+  header{text-align:center;margin-bottom:18px}
+  h1{font-size:1.7rem;color:var(--accent)}
+  .tagline{color:var(--muted);margin-top:6px;font-size:.95rem}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:18px;
+        padding:26px;box-shadow:0 14px 40px rgba(2,32,71,.12)}
+  .hidden{display:none}
+  .infogrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+  .info{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:14px}
+  .info b{color:var(--accent)}
+  .info p{color:var(--muted);font-size:.85rem;margin-top:4px}
+  label.fld{display:block;margin:14px 0 6px;font-size:.9rem;color:var(--muted)}
+  input,select{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text);font-size:.95rem}
+  .note{font-size:.8rem;color:var(--muted);margin-top:8px;line-height:1.5}
+  .note a{color:var(--accent)}
+  .row{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:20px}
+  button{cursor:pointer;font-size:1rem;font-weight:700;border:none;border-radius:12px;
+         padding:13px 26px;color:#fff;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.15s transform}
+  button:hover{transform:translateY(-2px)}
+  button.ghost{background:#fff;border:1px solid var(--border);color:var(--text)}
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;font-size:.9rem;color:var(--muted)}
+  .badge{background:var(--card2);border:1px solid var(--border);padding:6px 12px;border-radius:999px}
+  .badge.ok{color:var(--good);font-weight:700}
+  .timer.low{color:var(--bad);font-weight:700}
+  .progress{height:8px;background:var(--card2);border-radius:999px;overflow:hidden;margin-bottom:20px}
+  .bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .3s}
+  .qtag{display:inline-block;font-size:.72rem;letter-spacing:1px;text-transform:uppercase;
+        color:var(--accent);border:1px solid var(--border);border-radius:999px;padding:4px 10px;margin-bottom:12px}
+  .signbox{display:flex;justify-content:center;margin:6px 0 14px}
+  .signbox svg{width:150px;height:150px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.18))}
+  .question{font-size:1.2rem;line-height:1.5;margin-bottom:8px;font-weight:600}
+  .answers{display:grid;gap:10px;margin-top:16px}
+  .ans{text-align:left;background:var(--card2);border:1px solid var(--border);color:var(--text);
+       font-weight:500;padding:13px 16px;border-radius:12px}
+  .ans:hover{border-color:var(--accent);transform:none}
+  .ans.correct{background:#dcfce7;border-color:var(--good)}
+  .ans.wrong{background:#fee2e2;border-color:var(--bad)}
+  .ans:disabled{cursor:default}
+  .feedback{margin-top:14px;font-size:.95rem;min-height:22px;line-height:1.5}
+  .feedback.ok{color:var(--good)} .feedback.no{color:var(--bad)}
+  .nav{margin-top:18px;text-align:right}
+  .score-big{font-size:3rem;font-weight:800;text-align:center;color:var(--accent)}
+  .passmark{text-align:center;font-size:1.3rem;font-weight:800;margin:6px 0}
+  .passmark.pass{color:var(--good)} .passmark.fail{color:var(--bad)}
+  .verdict{text-align:center;color:var(--muted);margin:4px 0 20px}
+  .brow{display:flex;justify-content:space-between;background:var(--card2);padding:12px 16px;border-radius:12px;border:1px solid var(--border);margin-bottom:10px}
+  .loader{text-align:center;padding:30px 0}
+  .spin{width:42px;height:42px;border:4px solid var(--card2);border-top-color:var(--accent);border-radius:50%;margin:0 auto 16px;animation:sp 1s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  @media(max-width:520px){.infogrid{grid-template-columns:1fr}h1{font-size:1.4rem}.signbox svg{width:120px;height:120px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>🚗 CA Teen Permit Test · Gemini</h1>
+    <p class="tagline">Fresh questions every round · road signs with pictures + rules of the road</p>
+  </header>
+
+  <!-- SETUP -->
+  <section id="setup" class="card">
+    <p style="color:var(--muted)">Gemini writes a new practice test each round. Sign questions use the real road-sign
+       pictures built into this page, so they always display correctly.</p>
+
+    <label class="fld">Gemini API key (free)</label>
+    <input id="apiKey" type="password" placeholder="AIza...">
+    <p class="note">Get a free key at <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a>
+       — no credit card. Stored only in this browser and sent straight to Google. Avoid entering anything private,
+       since free-tier prompts may be used to improve Google's models. Leave blank to use the built-in question bank.</p>
+
+    <div class="infogrid">
+      <div>
+        <label class="fld">Number of questions</label>
+        <select id="numQ"><option>10</option><option selected>20</option><option>30</option></select>
+      </div>
+      <div>
+        <label class="fld">Mode</label>
+        <select id="mode"><option value="learn">Learn (no timer)</option><option value="timed">Timed (40s each)</option></select>
+      </div>
+    </div>
+    <div class="infogrid">
+      <div>
+        <label class="fld">Model</label>
+        <select id="model">
+          <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash-Lite (fast, biggest free quota)</option>
+          <option value="gemini-2.5-flash" selected>Gemini 2.5 Flash (smarter)</option>
+        </select>
+      </div>
+      <div>
+        <label class="fld">Sign-picture questions</label>
+        <select id="signRatio"><option value="0.4" selected>About 40%</option><option value="0.6">About 60%</option><option value="0.25">About 25%</option></select>
+      </div>
+    </div>
+
+    <div class="row"><button id="startBtn">Generate Test →</button></div>
+    <p class="tagline" style="margin-top:14px;font-size:.78rem">Study aid only. Confirm current rules in the official
+       California Driver Handbook at dmv.ca.gov.</p>
+  </section>
+
+  <!-- LOADING -->
+  <section id="loading" class="card hidden">
+    <div class="loader"><div class="spin"></div><p id="loadMsg">Gemini is writing a fresh practice test…</p></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="card hidden">
+    <div class="topbar">
+      <span class="badge" id="counter">Q1 / 20</span>
+      <span class="badge ok" id="liveScore">Score 0</span>
+      <span class="badge timer hidden" id="timer">⏱ 40s</span>
+    </div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <span class="qtag" id="qtag">Road Sign</span>
+    <div class="signbox" id="signbox"></div>
+    <div class="question" id="question">…</div>
+    <div class="answers" id="answers"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="nav"><button id="nextBtn" class="ghost hidden">Next →</button></div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results" class="card hidden">
+    <div class="score-big" id="scoreBig">0 / 20</div>
+    <div class="passmark" id="passmark"></div>
+    <div class="verdict" id="verdict"></div>
+    <div id="breakdown"></div>
+    <div class="row">
+      <button id="retryBtn">New Test ↻</button>
+      <button id="reviewBtn" class="ghost">Review Answers</button>
+    </div>
+    <div id="reviewArea" style="margin-top:22px"></div>
+  </section>
+</div>
+
+<script>
+/* ================= ROAD SIGNS (inline SVG) ================= */
+const SIGNS = {
+  stop:`<svg viewBox="0 0 100 100"><polygon points="30,4 70,4 96,30 96,70 70,96 30,96 4,70 4,30" fill="#c1121f" stroke="#fff" stroke-width="4"/><text x="50" y="60" font-size="22" fill="#fff" text-anchor="middle" font-weight="bold" font-family="Arial">STOP</text></svg>`,
+  yield:`<svg viewBox="0 0 100 100"><polygon points="50,94 4,12 96,12" fill="#fff" stroke="#c1121f" stroke-width="9"/><text x="50" y="46" font-size="15" fill="#c1121f" font-weight="bold" text-anchor="middle">YIELD</text></svg>`,
+  donotenter:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#c1121f"/><rect x="20" y="42" width="60" height="16" rx="2" fill="#fff"/></svg>`,
+  wrongway:`<svg viewBox="0 0 100 70"><rect x="3" y="6" width="94" height="58" rx="4" fill="#c1121f"/><text x="50" y="32" font-size="17" fill="#fff" font-weight="bold" text-anchor="middle">WRONG</text><text x="50" y="54" font-size="17" fill="#fff" font-weight="bold" text-anchor="middle">WAY</text></svg>`,
+  oneway:`<svg viewBox="0 0 110 60"><rect x="2" y="2" width="106" height="56" fill="#111"/><polygon points="20,30 44,20 44,26 90,26 90,34 44,34 44,40" fill="#fff"/><text x="62" y="52" font-size="9" fill="#fff" font-weight="bold" text-anchor="middle">ONE WAY</text></svg>`,
+  speed65:`<svg viewBox="0 0 90 120"><rect x="6" y="4" width="78" height="112" rx="4" fill="#fff" stroke="#111" stroke-width="3"/><text x="45" y="28" font-size="13" text-anchor="middle" font-weight="bold">SPEED</text><text x="45" y="46" font-size="13" text-anchor="middle" font-weight="bold">LIMIT</text><text x="45" y="98" font-size="42" text-anchor="middle" font-weight="bold">65</text></svg>`,
+  railroad:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#ffcc00" stroke="#111" stroke-width="3"/><line x1="22" y1="22" x2="78" y2="78" stroke="#111" stroke-width="5"/><line x1="78" y1="22" x2="22" y2="78" stroke="#111" stroke-width="5"/><text x="33" y="57" font-size="20" font-weight="bold">R</text><text x="53" y="57" font-size="20" font-weight="bold">R</text></svg>`,
+  ped:`<svg viewBox="0 0 100 100"><polygon points="50,4 96,50 50,96 4,50" fill="#ffcc00" stroke="#111" stroke-width="3"/><g transform="translate(50,52)"><circle cx="0" cy="-18" r="6"/><path d="M-2,-12 L-2,6 M2,-12 L2,6" stroke="#111" stroke-width="4"/><path d="M-2,-8 L-12,-2 M2,-8 L12,-2" stroke="#111" stroke-width="4" fill="none"/><path d="M-2,6 L-9,20 M2,6 L9,20" stroke="#111" stroke-width="4"/></g></svg>`,
+  curve:`<svg viewBox="0 0 100 100"><polygon points="50,4 96,50 50,96 4,50" fill="#ffcc00" stroke="#111" stroke-width="3"/><path d="M40,78 C40,55 60,52 60,38 L60,28" fill="none" stroke="#111" stroke-width="7"/><polygon points="60,18 52,32 68,32" fill="#111"/></svg>`,
+  merge:`<svg viewBox="0 0 100 100"><polygon points="50,4 96,50 50,96 4,50" fill="#ffcc00" stroke="#111" stroke-width="3"/><path d="M40,80 L40,40" stroke="#111" stroke-width="7" fill="none"/><polygon points="40,28 33,42 47,42" fill="#111"/><path d="M64,80 C64,58 40,58 40,46" stroke="#111" stroke-width="7" fill="none"/></svg>`,
+  slippery:`<svg viewBox="0 0 100 100"><polygon points="50,4 96,50 50,96 4,50" fill="#ffcc00" stroke="#111" stroke-width="3"/><rect x="30" y="34" width="34" height="16" rx="3" fill="none" stroke="#111" stroke-width="4" transform="rotate(-12 47 42)"/><path d="M28,60 q6,-8 12,0 t12,0 t12,0" fill="none" stroke="#111" stroke-width="4"/><path d="M28,70 q6,-8 12,0 t12,0 t12,0" fill="none" stroke="#111" stroke-width="4"/></svg>`,
+  noleft:`<svg viewBox="0 0 100 100"><rect x="6" y="6" width="88" height="88" rx="8" fill="#fff" stroke="#111" stroke-width="3"/><path d="M62,72 L62,52 C62,44 54,42 46,42 L34,42" fill="none" stroke="#111" stroke-width="7"/><polygon points="24,42 38,35 38,49" fill="#111"/><circle cx="50" cy="50" r="38" fill="none" stroke="#c1121f" stroke-width="7"/><line x1="22" y1="78" x2="78" y2="22" stroke="#c1121f" stroke-width="7"/></svg>`,
+  nouturn:`<svg viewBox="0 0 100 100"><rect x="6" y="6" width="88" height="88" rx="8" fill="#fff" stroke="#111" stroke-width="3"/><path d="M36,72 L36,46 C36,34 64,34 64,46 L64,60" fill="none" stroke="#111" stroke-width="7"/><polygon points="64,72 57,58 71,58" fill="#111"/><circle cx="50" cy="50" r="38" fill="none" stroke="#c1121f" stroke-width="7"/><line x1="22" y1="78" x2="78" y2="22" stroke="#c1121f" stroke-width="7"/></svg>`,
+  school:`<svg viewBox="0 0 100 100"><polygon points="50,4 94,38 77,94 23,94 6,38" fill="#c6e600" stroke="#111" stroke-width="3"/><g transform="translate(50,54)"><circle cx="-6" cy="-14" r="5"/><circle cx="9" cy="-12" r="5"/><path d="M-6,-9 L-6,8 M-10,2 L-2,2 M-6,8 L-11,22 M-6,8 L-1,22" stroke="#111" stroke-width="3.5" fill="none"/><path d="M9,-7 L9,8 M9,8 L4,22 M9,8 L14,22 M5,0 L13,0" stroke="#111" stroke-width="3.5" fill="none"/></g></svg>`,
+  signal:`<svg viewBox="0 0 100 100"><polygon points="50,4 96,50 50,96 4,50" fill="#ffcc00" stroke="#111" stroke-width="3"/><rect x="40" y="26" width="20" height="48" rx="4" fill="#111"/><circle cx="50" cy="36" r="5" fill="#dc2626"/><circle cx="50" cy="50" r="5" fill="#facc15"/><circle cx="50" cy="64" r="5" fill="#16a34a"/></svg>`
+};
+/* meaning of each sign, given to Gemini so it can write accurate questions */
+const SIGN_INFO = {
+  stop:"Red octagon STOP sign — come to a complete stop",
+  yield:"Red/white downward triangle YIELD sign — slow and give right of way",
+  donotenter:"Red circle with white horizontal bar — Do Not Enter",
+  wrongway:"Red rectangle reading WRONG WAY",
+  oneway:"Black sign with white arrow reading ONE WAY — traffic flows one direction",
+  speed65:"White rectangle SPEED LIMIT 65 — maximum legal speed",
+  railroad:"Round yellow sign with X and RR — railroad crossing ahead",
+  ped:"Yellow diamond with a walking person — pedestrian crossing ahead",
+  curve:"Yellow diamond with a curving arrow — curve in the road ahead",
+  merge:"Yellow diamond showing two lanes joining — merging traffic ahead",
+  slippery:"Yellow diamond with a car and skid marks — slippery when wet",
+  noleft:"White square, left-turn arrow with red circle and slash — no left turn",
+  nouturn:"White square, U-turn arrow with red circle and slash — no U-turn",
+  school:"Fluorescent yellow-green pentagon with children — school zone / crossing",
+  signal:"Yellow diamond with a traffic light — signal ahead, be prepared to stop"
+};
+
+/* ================= Built-in fallback bank ================= */
+const BANK = [
+  {cat:"Road Sign", sign:"stop", q:"What must you do at this sign?", opts:["Slow and proceed if clear","Come to a complete stop, then go when safe","Stop only if a car is present","Yield but keep rolling"], a:1, exp:"A STOP sign requires a full stop, then proceed when safe."},
+  {cat:"Road Sign", sign:"yield", q:"This sign means:", opts:["Stop completely every time","Slow down and give the right of way","No entry","Merge left immediately"], a:1, exp:"YIELD: slow and let cross traffic and pedestrians go first."},
+  {cat:"Road Sign", sign:"donotenter", q:"This sign tells you:", opts:["One way ahead","Do not enter — wrong direction","No parking","Road closed"], a:1, exp:"DO NOT ENTER marks roads you must not drive into."},
+  {cat:"Road Sign", sign:"railroad", q:"This round yellow sign warns of:", opts:["A roundabout","A railroad crossing ahead","A rest area","A racetrack"], a:1, exp:"The round yellow RxR sign warns a railroad crossing is ahead."},
+  {cat:"Road Sign", sign:"ped", q:"This yellow diamond sign means:", opts:["No pedestrians","Watch for pedestrians / crosswalk ahead","School bus stop","Hospital ahead"], a:1, exp:"It warns you to watch for pedestrians crossing."},
+  {cat:"Road Sign", sign:"speed65", q:"This sign means:", opts:["Minimum speed 65","Maximum legal speed in ideal conditions is 65 mph","Suggested speed 65","Nearby traffic speed"], a:1, exp:"A speed limit sign shows the maximum legal speed in ideal conditions."},
+  {cat:"Teen Rules", sign:"", q:"For drivers under 21, what BAC is illegal in California?", opts:["0.08%+","0.05%+","0.01%+ (zero tolerance)","Over 0.10%"], a:2, exp:"Zero tolerance: under-21 drivers with BAC 0.01% or higher are in violation."},
+  {cat:"Teen Rules", sign:"", q:"In the first 12 months of a provisional license (under 18) you generally cannot drive:", opts:["Anytime","Between 11 p.m. and 5 a.m. (unless an exception applies)","On weekends","On freeways"], a:1, exp:"First 12 months: no driving 11 p.m.–5 a.m. without a qualifying exception."},
+  {cat:"Rules of the Road", sign:"", q:"Recommended minimum following distance is:", opts:["1 second","3 seconds","Half a car length","10 seconds"], a:1, exp:"Use the 3-second rule."},
+  {cat:"Rules of the Road", sign:"", q:"At a four-way stop, two cars arrive together. Who goes first?", opts:["Faster car","Car on the left","Car on the right","Larger vehicle"], a:2, exp:"The driver on the left yields to the driver on the right."}
+];
+
+/* ================= State ================= */
+let qs=[], idx=0, score=0, perCat={}, answers=[], tInt=null, timeLeft=40, perQ=40, locked=false, timed=false;
+const $=id=>document.getElementById(id);
+function show(id){["setup","loading","quiz","results"].forEach(s=>$(s).classList.toggle("hidden",s!==id));}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
+function shuffleOpts(item){const correct=item.opts[item.a];const opts=shuffle([...item.opts]);return {...item,opts,a:opts.indexOf(correct)};}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+try{const k=localStorage.getItem("bb_gemini_key"); if(k)$("apiKey").value=k;}catch(e){}
+
+$("startBtn").onclick=begin;
+$("retryBtn").onclick=()=>show("setup");
+$("nextBtn").onclick=next;
+$("reviewBtn").onclick=showReview;
+
+async function begin(){
+  timed=$("mode").value==="timed";
+  const key=$("apiKey").value.trim();
+  const n=parseInt($("numQ").value);
+  const model=$("model").value;
+  const ratio=parseFloat($("signRatio").value);
+  try{ if(key) localStorage.setItem("bb_gemini_key",key);}catch(e){}
+
+  show("loading");
+  let generated=null;
+  if(key){
+    try{ generated=await generate(key,model,n,ratio); }
+    catch(err){ console.error(err);
+      $("loadMsg").textContent="⚠ "+err.message+" — using built-in questions."; await wait(1900);
+    }
+  }else{
+    $("loadMsg").textContent="No API key — using built-in questions."; await wait(1300);
+  }
+  let pool = (generated && generated.length) ? generated : BANK.map(x=>({...x}));
+  pool = shuffle(pool).map(shuffleOpts);
+  qs = n>=pool.length ? pool : pool.slice(0,n);
+  idx=0;score=0;perCat={};answers=[];
+  $("timer").classList.toggle("hidden",!timed);
+  show("quiz"); render();
+}
+
+async function generate(key,model,n,ratio){
+  const signCount=Math.round(n*ratio);
+  const keyList=Object.entries(SIGN_INFO).map(([k,v])=>`"${k}" = ${v}`).join("; ");
+  const prompt =
+`Create exactly ${n} multiple-choice questions for the California DMV permit (knowledge) test, aimed at a driver under 18.
+Make about ${signCount} of them ROAD SIGN questions and the rest RULES OF THE ROAD questions (include some California teen/provisional rules: 11pm-5am restriction, passengers under 20 rule, zero-tolerance 0.01% BAC, no cell phone use under 18).
+
+For ROAD SIGN questions you MUST set "sign" to exactly one of these keys (the page shows the matching picture):
+${keyList}.
+Write the question/answer to match that exact sign's meaning. Do not invent other sign keys.
+For RULES questions, set "sign" to an empty string "".
+
+Rules:
+- Exactly 4 options each, exactly one correct. "a" = 0-based index of the correct option.
+- Keep facts accurate for California. One-sentence "exp" explanation.
+- "cat" should be one of: "Road Sign", "Rules of the Road", "Teen Rules".`;
+
+  const schema={type:"ARRAY",items:{type:"OBJECT",properties:{
+    cat:{type:"STRING"}, sign:{type:"STRING"}, q:{type:"STRING"},
+    opts:{type:"ARRAY",items:{type:"STRING"}}, a:{type:"INTEGER"}, exp:{type:"STRING"}
+  }, required:["cat","sign","q","opts","a","exp"]}};
+
+  const url=`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+  const res=await fetch(url,{method:"POST",headers:{"content-type":"application/json"},
+    body:JSON.stringify({contents:[{parts:[{text:prompt}]}],
+      generationConfig:{temperature:1.0,maxOutputTokens:8000,responseMimeType:"application/json",responseSchema:schema}})});
+  if(!res.ok){let msg="API error "+res.status;try{const e=await res.json();if(e.error&&e.error.message)msg=e.error.message;}catch(_){}throw new Error(msg);}
+  const data=await res.json();
+  let text="";try{text=data.candidates[0].content.parts.map(p=>p.text||"").join("");}catch(_){}
+  if(!text) throw new Error("Empty response from Gemini");
+  text=text.replace(/```json/gi,"").replace(/```/g,"").trim();
+  const s=text.indexOf("["),e=text.lastIndexOf("]");
+  if(s>=0&&e>=0)text=text.slice(s,e+1);
+  let arr=JSON.parse(text);
+  arr=arr.filter(x=>x&&x.q&&Array.isArray(x.opts)&&x.opts.length===4&&typeof x.a==="number"&&x.a>=0&&x.a<4);
+  arr.forEach(x=>{ x.cat=x.cat||"Rules of the Road"; x.exp=x.exp||"";
+    if(x.sign && !SIGNS[x.sign]){x.sign="";}          // drop unknown sign keys, keep as text question
+  });
+  if(!arr.length) throw new Error("Could not parse questions");
+  return arr;
+}
+
+/* ================= Quiz engine ================= */
+function render(){
+  locked=false;
+  const item=qs[idx];
+  $("counter").textContent=`Q${idx+1} / ${qs.length}`;
+  $("liveScore").textContent="Score "+score;
+  $("bar").style.width=(idx/qs.length*100)+"%";
+  $("qtag").textContent=item.cat;
+  $("feedback").textContent="";$("feedback").className="feedback";
+  $("nextBtn").classList.add("hidden");
+  const sb=$("signbox");
+  if(item.sign&&SIGNS[item.sign]){sb.innerHTML=SIGNS[item.sign];}else{sb.innerHTML="";}
+  $("question").textContent=item.q;
+  const box=$("answers");box.innerHTML="";
+  item.opts.forEach((opt,i)=>{const b=document.createElement("button");b.className="ans";b.textContent=opt;b.onclick=()=>choose(i);box.appendChild(b);});
+  if(timed)startTimer(); else $("timer").classList.add("hidden");
+}
+function choose(i){
+  if(locked)return;locked=true;stopTimer();
+  const item=qs[idx];const btns=document.querySelectorAll(".ans");
+  btns.forEach(b=>b.disabled=true);
+  const ok=i===item.a;
+  btns[item.a].classList.add("correct"); if(!ok)btns[i].classList.add("wrong");
+  if(ok)score++; $("liveScore").textContent="Score "+score;
+  perCat[item.cat]=perCat[item.cat]||{c:0,t:0};perCat[item.cat].t++;if(ok)perCat[item.cat].c++;
+  answers.push({q:item.q,sign:item.sign,picked:item.opts[i],correct:item.opts[item.a],ok,exp:item.exp});
+  const fb=$("feedback");fb.textContent=(ok?"✓ Correct! ":"✗ Not quite. ")+item.exp;fb.className="feedback "+(ok?"ok":"no");
+  $("nextBtn").classList.remove("hidden");
+  $("nextBtn").textContent=(idx+1>=qs.length)?"See Results →":"Next →";
+}
+function next(){idx++; idx>=qs.length?finish():render();}
+function startTimer(){timeLeft=perQ;updTimer();tInt=setInterval(()=>{timeLeft--;updTimer();if(timeLeft<=0){stopTimer();timeOut();}},1000);}
+function stopTimer(){if(tInt){clearInterval(tInt);tInt=null;}$("timer").classList.remove("low");}
+function updTimer(){if(!timed)return;$("timer").textContent="⏱ "+timeLeft+"s";$("timer").classList.toggle("low",timeLeft<=10);}
+function timeOut(){
+  if(locked)return;locked=true;
+  const item=qs[idx];const btns=document.querySelectorAll(".ans");
+  btns.forEach(b=>b.disabled=true); if(btns[item.a])btns[item.a].classList.add("correct");
+  perCat[item.cat]=perCat[item.cat]||{c:0,t:0};perCat[item.cat].t++;
+  answers.push({q:item.q,sign:item.sign,picked:"(timed out)",correct:item.opts[item.a],ok:false,exp:item.exp});
+  const fb=$("feedback");fb.textContent="⏰ Time's up! "+item.exp;fb.className="feedback no";
+  $("nextBtn").classList.remove("hidden");$("nextBtn").textContent=(idx+1>=qs.length)?"See Results →":"Next →";
+}
+function finish(){
+  stopTimer();$("bar").style.width="100%";show("results");
+  $("scoreBig").textContent=`${score} / ${qs.length}`;
+  const pct=Math.round(score/qs.length*100);const passed=pct>=83;
+  const pm=$("passmark");pm.textContent=passed?`PASS · ${pct}%`:`Keep practicing · ${pct}%`;pm.className="passmark "+(passed?"pass":"fail");
+  $("verdict").textContent=passed?"Above the 83% needed on the real under-18 test. Nice work!":"You need 83% to pass the real test. Review the misses and try again.";
+  const bd=$("breakdown");bd.innerHTML="";
+  Object.keys(perCat).forEach(c=>{const o=perCat[c];const row=document.createElement("div");row.className="brow";row.innerHTML=`<span>${c}</span><span><b>${o.c} / ${o.t}</b></span>`;bd.appendChild(row);});
+}
+function showReview(){
+  const area=$("reviewArea");
+  if(area.innerHTML){area.innerHTML="";return;}
+  area.innerHTML=answers.map((a,i)=>`
+    <div class="brow" style="display:block">
+      ${a.sign&&SIGNS[a.sign]?`<div style="width:70px;height:70px;margin-bottom:6px">${SIGNS[a.sign]}</div>`:""}
+      <div style="margin-bottom:6px"><b>${i+1}. ${a.q}</b></div>
+      <div style="color:${a.ok?'var(--good)':'var(--bad)'}">Your answer: ${a.picked} ${a.ok?'✓':'✗'}</div>
+      ${a.ok?'':`<div style="color:var(--good)">Correct: ${a.correct}</div>`}
+      <div style="color:var(--muted);font-size:.85rem;margin-top:4px">${a.exp}</div>
+    </div>`).join("");
+}
+</script>
+</body>
+</html>
